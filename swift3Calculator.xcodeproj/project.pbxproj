@@ -14,6 +14,7 @@
 		F2DE5BA51F57C7BF0044A287 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2DE5BA31F57C7BF0044A287 /* LaunchScreen.storyboard */; };
 		F2DE5BB01F57C7BF0044A287 /* swift3CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DE5BAF1F57C7BF0044A287 /* swift3CalculatorTests.swift */; };
 		F2DE5BBB1F57C7BF0044A287 /* swift3CalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DE5BBA1F57C7BF0044A287 /* swift3CalculatorUITests.swift */; };
+		F2DE5BC91F58BC1D0044A287 /* CalculatorBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DE5BC81F58BC1D0044A287 /* CalculatorBrain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		F2DE5BB61F57C7BF0044A287 /* swift3CalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = swift3CalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2DE5BBA1F57C7BF0044A287 /* swift3CalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swift3CalculatorUITests.swift; sourceTree = "<group>"; };
 		F2DE5BBC1F57C7BF0044A287 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F2DE5BC81F58BC1D0044A287 /* CalculatorBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorBrain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				F2DE5B9A1F57C7BF0044A287 /* AppDelegate.swift */,
 				F2DE5B9C1F57C7BF0044A287 /* ViewController.swift */,
+				F2DE5BC81F58BC1D0044A287 /* CalculatorBrain.swift */,
 				F2DE5B9E1F57C7BF0044A287 /* Main.storyboard */,
 				F2DE5BA11F57C7BF0044A287 /* Assets.xcassets */,
 				F2DE5BA31F57C7BF0044A287 /* LaunchScreen.storyboard */,
@@ -262,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2DE5BC91F58BC1D0044A287 /* CalculatorBrain.swift in Sources */,
 				F2DE5B9D1F57C7BF0044A287 /* ViewController.swift in Sources */,
 				F2DE5B9B1F57C7BF0044A287 /* AppDelegate.swift in Sources */,
 			);
