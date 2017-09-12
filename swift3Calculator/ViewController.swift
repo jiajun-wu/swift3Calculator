@@ -33,12 +33,23 @@ class ViewController: UIViewController {
         }
     }
     
-    var isTypingDigit = false
+    var isTypingDigit = false, decimaiIsTouched = false
     
     @IBAction func touchDigit(_ sender: UIButton) {
         let displayText = display.text!
         
-        let touchedDigit = sender.currentTitle!
+        var touchedDigit = String()
+        
+        let whatIsTouched = sender.currentTitle!
+        
+        if decimaiIsTouched==false && whatIsTouched=="."{
+            decimaiIsTouched = true
+            touchedDigit = whatIsTouched
+        }else if decimaiIsTouched==true && whatIsTouched=="."{
+            touchedDigit = ""
+        }else{
+            touchedDigit = whatIsTouched
+        }
         
         if isTypingDigit{
             display.text = displayText + touchedDigit
@@ -47,19 +58,22 @@ class ViewController: UIViewController {
         }
         
         isTypingDigit = true
+        
     }
     
     @IBAction func preformOperation(_ sender: UIButton) {
-        isTypingDigit = false
+        decimaiIsTouched = false
         
-        let touchedOperation = sender.currentTitle!
-        
-        switch touchedOperation {
-        case "C":
-            display.text = "0"
-        default:
-            break
+        if isTypingDigit{
+            calculatorBrain.setOperand(displayValue)
+            isTypingDigit = false
         }
+        
+        if let mathematicalSymbol = sender.currentTitle{
+            calculatorBrain.preformOperation(mathematicalSymbol)
+        }
+        
+        displayValue = calculatorBrain.result
     }
 }
 
