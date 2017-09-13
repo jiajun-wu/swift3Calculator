@@ -20,10 +20,12 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
     private var calculatorBrain = CalculatorBrain()
     
     @IBOutlet weak var display: UILabel!
     
+    // Computed propertity with get and set
     var displayValue: Double{
         get{
             return Double(display.text!)!
@@ -42,10 +44,11 @@ class ViewController: UIViewController {
         
         let whatIsTouched = sender.currentTitle!
         
-        if decimaiIsTouched==false && whatIsTouched=="."{
+        // check and control the user presses the decimal point for multiple times
+        if decimaiIsTouched == false && whatIsTouched == "."{
             decimaiIsTouched = true
             touchedDigit = whatIsTouched
-        }else if decimaiIsTouched==true && whatIsTouched=="."{
+        }else if decimaiIsTouched == true && whatIsTouched == "."{
             touchedDigit = ""
         }else{
             touchedDigit = whatIsTouched

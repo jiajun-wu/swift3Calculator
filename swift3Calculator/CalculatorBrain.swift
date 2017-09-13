@@ -15,7 +15,7 @@ struct CalculatorBrain{
     
     private var internalProgram = [AnyObject]()
     
-    private var equalsIsTouched = false
+    private var equalsButtonIsTouched = false
     
     private var history = String()
     
@@ -23,14 +23,18 @@ struct CalculatorBrain{
     
     private var C_Clear = false, AC_Clear = false
     
+    // mutating the accumulator value to be whatever the value is passed in
     mutating func setOperand(_ operand: Double){
+        // reset the clear (C) button
         C_Clear = false; AC_Clear = false
+        
         historyDictionary.append(operand)
         accumulator = operand
         
         internalProgram.append(operand as AnyObject)
     }
     
+    // create a dicitionary list of all the operations
     private var operations: Dictionary<String, Operation> = [
         "π": Operation.Constant(Double.pi),
         "e": Operation.Constant(M_E),
@@ -46,11 +50,11 @@ struct CalculatorBrain{
         "-": Operation.BinaryOperation{$0-$1},
         "×": Operation.BinaryOperation{$0*$1},
         "÷": Operation.BinaryOperation{$0/$1},
-        "MC": Operation.MemoryClear,
-        "MR": Operation.MemoryRecall,
-        "M+": Operation.MemoryAdd,
-        "M-": Operation.MemoryMinus,
-        "MS": Operation.MemoryStore,
+        "MS": Operation.preformMemory("MemoryStore"),
+        "MC": Operation.preformMemory("MemoryClear"),
+        "MR": Operation.preformMemory("MemoryRecall"),
+        "M+": Operation.preformMemory("MemoryAdd"),
+        "M-": Operation.preformMemory("MemoryMinus"),
         
         "=": Operation.Equals,
         "C": Operation.Clear
@@ -61,11 +65,7 @@ struct CalculatorBrain{
         case UnaryOperation(printSymbol, (Double)->Double)
 //        case UnaryOperation((Double)->Double)
         case BinaryOperation((Double, Double)->Double)
-        case MemoryStore
-        case MemoryRecall
-        case MemoryClear
-        case MemoryAdd
-        case MemoryMinus
+        case preformMemory(String)
         case Equals
         case Clear
         
@@ -75,6 +75,7 @@ struct CalculatorBrain{
         }
     }
     
+    // preform operation functions
     mutating func preformOperation(_ symbol: String){
         internalProgram.append(symbol as AnyObject)
         
@@ -92,67 +93,54 @@ struct CalculatorBrain{
                     executePendingBinaryOperation()
                     pending = PendindBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
                     historyDictionary.append(symbol)
-                    
-                case .MemoryStore:
-                    currentMemory = accumulator
-                    
-                case .MemoryRecall:
-                    accumulator = currentMemory
-                    
-                case .MemoryClear:
-                    currentMemory = 0.0
-                    
-                case .MemoryAdd:
-                    currentMemory+=accumulator
-                    
-                case .MemoryMinus:
-                    currentMemory-=accumulator
+                
+                case .preformMemory(let memoryOption):
+                    switch memoryOption {
+                    case "MemoryStore":
+                        currentMemory = accumulator
+                    case "MemoryRecall":
+                        accumulator = currentMemory
+                    case "MemoryClear":
+                        currentMemory = 0.0
+                    case "MemoryAdd":
+                        currentMemory += accumulator
+                    case "MemoryMinus":
+                        currentMemory -= accumulator
+                    default:
+                        break
+                }
                     
                 case .Clear:
                     clear()
                     
                 case .Equals:
-                    equalsIsTouched = true
+                    equalsButtonIsTouched = true
                     executePendingBinaryOperation()
                     printHistory()
             }
         }
     }
     
+    //  execute the result when equals button is touched
     private mutating func executePendingBinaryOperation(){
         if pending != nil{
             accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator)
             pending = nil
             
-            if equalsIsTouched {
+            if equalsButtonIsTouched {
                 historyDictionary.append("=\(String(accumulator))")
-                equalsIsTouched=false
+                equalsButtonIsTouched=false
             }
         }
     }
     
     private var pending: PendindBinaryOperationInfo?
     
+    // creating a pass by value struct that gets a copy of the function and the first operand
     private struct PendindBinaryOperationInfo{
+        // free initializer from struct, don't need to initial any value to it
         var binaryFunction:(Double, Double)->Double
         var firstOperand: Double
-    }
-    
-    private mutating func preformMemory(functionName: String, numberOnDisplay: Double) -> Double{
-        switch functionName {
-            case "MemoryClear":
-                currentMemory = 0
-            case "MemoryRecall":
-                break
-            case "MemoryAdd":
-                currentMemory += numberOnDisplay
-            case "MemoryMinus":
-                currentMemory -= numberOnDisplay
-            case "MemoryStore":
-                currentMemory = numberOnDisplay
-            default: break
-        }
-        return currentMemory
     }
     
     // typealias: let you create a type that is exacty the same as other type
@@ -177,6 +165,7 @@ struct CalculatorBrain{
         }
     }
     
+    // check and control click clear button once or twice
     private mutating func clear(){
         if C_Clear==false && AC_Clear==false {
             C_Clear = true
@@ -195,8 +184,7 @@ struct CalculatorBrain{
         }
     }
     
-    var numberFormatter : NumberFormatter?
-    
+    // print out calculation history in console
     private mutating func printHistory(){
         for operationsAndOperands in historyDictionary{
             if let operand = operationsAndOperands as? Double{
@@ -226,9 +214,8 @@ struct CalculatorBrain{
         historyDictionary.removeAll()
     }
     
+    // Read-Only Computed Properties, return result to display
     var result:Double{
-        get{
-            return accumulator
-        }
+        return accumulator
     }
 }
