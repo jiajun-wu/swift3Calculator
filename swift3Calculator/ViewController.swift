@@ -13,6 +13,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        //calculatorBrain.addUnaryOperation(named: String, 0){
+            
+       // }
     }
     
     override func didReceiveMemoryWarning() {
@@ -77,6 +81,24 @@ class ViewController: UIViewController {
         }
         
         displayValue = calculatorBrain.result
+    }
+    
+    @IBOutlet weak var variable: UITextField!
+    @IBOutlet weak var variableValue: UITextField!
+    
+    @IBAction func use(_ sender: UIButton) {
+        variableValue.text! = ""
+        calculatorBrain.setOperant(variable.text!)
+        displayValue = calculatorBrain.variableValues[variable.text!]!
+        
+    }
+    
+    @IBAction func create(_ sender: UIButton) {
+        calculatorBrain.addVariable(variableName: variable.text!, value: Double(variableValue.text!)!)
+    }
+    
+    @IBAction func undo(_ sender: UIButton) {
+        
     }
 }
 

@@ -9,6 +9,7 @@
 import Foundation
 
 struct CalculatorBrain{
+    
     private var accumulator = 0.0
     
     private var currentMemory = 0.0
@@ -21,7 +22,13 @@ struct CalculatorBrain{
     
     private var historyDictionary = [Any]()
     
+    var variableValues = [String: Double]()
+    
     private var C_Clear = false, AC_Clear = false
+    
+    mutating func addVariable(variableName symbol: String, value: Double){
+        variableValues[symbol] = value
+    }
     
     // mutating the accumulator value to be whatever the value is passed in
     mutating func setOperand(_ operand: Double){
@@ -34,6 +41,13 @@ struct CalculatorBrain{
         internalProgram.append(operand as AnyObject)
     }
     
+    mutating func setOperant(_ variable: String){
+        historyDictionary.append(variable)
+        accumulator = variableValues[variable] ?? 0
+        //print("in setOperant with String parameter:\n")
+        print("variable: \(variable)=\(variableValues[variable] ?? 0)")
+    }
+    
     // create a dicitionary list of all the operations
     private var operations: Dictionary<String, Operation> = [
         "π": Operation.Constant(Double.pi),
@@ -42,7 +56,7 @@ struct CalculatorBrain{
         "sin": Operation.UnaryOperation(.Prefix("sin")){sin($0*Double.pi/180)},
         "cos": Operation.UnaryOperation(.Prefix("cos")){cos($0*Double.pi/180)},
         "tan": Operation.UnaryOperation(.Prefix("tan")){tan($0*Double.pi/180)},
-        "±": Operation.UnaryOperation(.Prefix("±")){-$0},
+        "±": Operation.UnaryOperation(.Prefix("-")){-$0},
         "%": Operation.UnaryOperation(.Postfix("%")){$0/100},
         "x²": Operation.UnaryOperation(.Postfix("²")){$0*$0},
 //        "+": Operation.BinaryOperation({ (op1: Double, op2: Double)->Double in op1*op2 }),
@@ -59,6 +73,11 @@ struct CalculatorBrain{
         "=": Operation.Equals,
         "C": Operation.Clear
     ]
+    mutating func undo() {
+        if !historyDictionary.isEmpty {
+            historyDictionary.removeLast()
+        }
+    }
     
     private enum Operation{
         case Constant(Double)
@@ -176,11 +195,11 @@ struct CalculatorBrain{
         }else if C_Clear==true && AC_Clear==false{
             AC_Clear = true
             accumulator = 0
+            currentMemory = 0
             pending = nil
             historyDictionary.removeAll()
         }else if C_Clear==true && AC_Clear==true {
             C_Clear = false; AC_Clear = false
-            
         }
     }
     
